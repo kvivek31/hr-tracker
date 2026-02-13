@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import logo from "./ArneHire_t.png";
 // Local storage polyfill (replaces window.storage for local dev)
 window.storage = {
   async get(key) {
@@ -143,42 +144,42 @@ const LoginPage = ({ onLogin }) => {
   };
 
   return (
-    <div style={{fontFamily:"'Inter',-apple-system,sans-serif",height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#1e1b4b 0%,#312e81 30%,#4F46E5 60%,#7C3AED 100%)",position:"relative",overflow:"hidden"}}>
+    <div style={{fontFamily:"'Inter',-apple-system,sans-serif",height:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"linear-gradient(135deg,#f8fafc 0%,#e2e8f0 50%,#f1f5f9 100%)",position:"relative",overflow:"hidden"}}>
       <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:0.8}}@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}input{font-family:inherit}`}</style>
       {/* Background decorations */}
-      <div style={{position:"absolute",width:300,height:300,borderRadius:"50%",background:"rgba(124,58,237,0.15)",top:"-80px",right:"-60px",animation:"pulse 4s ease-in-out infinite"}}/>
-      <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",background:"rgba(99,102,241,0.1)",bottom:"-40px",left:"-40px",animation:"pulse 5s ease-in-out infinite 1s"}}/>
-      <div style={{position:"absolute",width:150,height:150,borderRadius:"50%",background:"rgba(167,139,250,0.08)",top:"40%",left:"10%",animation:"pulse 6s ease-in-out infinite 2s"}}/>
+      <div style={{position:"absolute",width:300,height:300,borderRadius:"50%",background:"rgba(30,64,175,0.06)",top:"-80px",right:"-60px",animation:"pulse 4s ease-in-out infinite"}}/>
+      <div style={{position:"absolute",width:200,height:200,borderRadius:"50%",background:"rgba(30,64,175,0.04)",bottom:"-40px",left:"-40px",animation:"pulse 5s ease-in-out infinite 1s"}}/>
+      <div style={{position:"absolute",width:150,height:150,borderRadius:"50%",background:"rgba(30,64,175,0.03)",top:"40%",left:"10%",animation:"pulse 6s ease-in-out infinite 2s"}}/>
 
       <div style={{animation:"fadeInUp 0.6s ease",width:"100%",maxWidth:380,padding:"0 24px",position:"relative",zIndex:1}}>
         {/* Logo & Title */}
         <div style={{textAlign:"center",marginBottom:32}}>
-          <div style={{width:72,height:72,borderRadius:24,background:"rgba(255,255,255,0.15)",backdropFilter:"blur(20px)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:36,margin:"0 auto 16px",boxShadow:"0 8px 32px rgba(0,0,0,0.2),inset 0 1px 0 rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.1)"}}>👥</div>
-          <h1 style={{margin:0,fontSize:28,fontWeight:800,color:"#fff",letterSpacing:"-0.5px"}}>HR Tracker</h1>
-          <p style={{margin:"8px 0 0",fontSize:14,color:"rgba(255,255,255,0.6)",fontWeight:500}}>Sign in to manage candidates</p>
+          <img src={logo} alt="ArneHire" style={{width:80,height:80,borderRadius:20,margin:"0 auto 16px",display:"block",objectFit:"contain"}}/>
+          <h1 style={{margin:0,fontSize:28,fontWeight:800,color:"#0f172a",letterSpacing:"-0.5px"}}>ArneHire</h1>
+          <p style={{margin:"8px 0 0",fontSize:14,color:"#64748b",fontWeight:500}}>Sign in to manage candidates</p>
         </div>
 
         {/* Login Card */}
-        <form onSubmit={handleLogin} style={{background:"rgba(255,255,255,0.08)",backdropFilter:"blur(24px)",borderRadius:24,padding:32,boxShadow:"0 20px 60px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.1)"}}>
+        <form onSubmit={handleLogin} style={{background:"#fff",borderRadius:24,padding:32,boxShadow:"0 20px 60px rgba(0,0,0,0.08),0 4px 12px rgba(0,0,0,0.04)",border:"1px solid #e2e8f0"}}>
           {/* Username */}
           <div style={{marginBottom:18}}>
-            <label style={{display:"block",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.7)",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.5px"}}>Username</label>
+            <label style={{display:"block",fontSize:12,fontWeight:700,color:"#475569",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.5px"}}>Username</label>
             <div style={{position:"relative"}}>
               <span style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",fontSize:16,opacity:0.5}}>👤</span>
               <input type="text" value={username} onChange={e=>setUsername(e.target.value)} placeholder="Enter username"
-                style={{width:"100%",padding:"14px 14px 14px 42px",border:"2px solid rgba(255,255,255,0.1)",borderRadius:14,fontSize:15,outline:"none",boxSizing:"border-box",background:"rgba(255,255,255,0.06)",color:"#fff",transition:"border-color 0.2s"}}
-                onFocus={e=>e.target.style.borderColor="rgba(167,139,250,0.6)"} onBlur={e=>e.target.style.borderColor="rgba(255,255,255,0.1)"}/>
+                style={{width:"100%",padding:"14px 14px 14px 42px",border:"2px solid #e2e8f0",borderRadius:14,fontSize:15,outline:"none",boxSizing:"border-box",background:"#f8fafc",color:"#0f172a",transition:"border-color 0.2s"}}
+                onFocus={e=>e.target.style.borderColor="#1e40af"} onBlur={e=>e.target.style.borderColor="#e2e8f0"}/>
             </div>
           </div>
 
           {/* Password */}
           <div style={{marginBottom:24}}>
-            <label style={{display:"block",fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.7)",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.5px"}}>Password</label>
+            <label style={{display:"block",fontSize:12,fontWeight:700,color:"#475569",marginBottom:8,textTransform:"uppercase",letterSpacing:"0.5px"}}>Password</label>
             <div style={{position:"relative"}}>
               <span style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",fontSize:16,opacity:0.5}}>🔒</span>
               <input type={showPw?"text":"password"} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter password"
-                style={{width:"100%",padding:"14px 48px 14px 42px",border:"2px solid rgba(255,255,255,0.1)",borderRadius:14,fontSize:15,outline:"none",boxSizing:"border-box",background:"rgba(255,255,255,0.06)",color:"#fff",transition:"border-color 0.2s"}}
-                onFocus={e=>e.target.style.borderColor="rgba(167,139,250,0.6)"} onBlur={e=>e.target.style.borderColor="rgba(255,255,255,0.1)"}/>
+                style={{width:"100%",padding:"14px 48px 14px 42px",border:"2px solid #e2e8f0",borderRadius:14,fontSize:15,outline:"none",boxSizing:"border-box",background:"#f8fafc",color:"#0f172a",transition:"border-color 0.2s"}}
+                onFocus={e=>e.target.style.borderColor="#1e40af"} onBlur={e=>e.target.style.borderColor="#e2e8f0"}/>
               <button type="button" onClick={()=>setShowPw(!showPw)} style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",fontSize:16,cursor:"pointer",padding:4,opacity:0.5}}>{showPw?"🙈":"👁️"}</button>
             </div>
           </div>
@@ -188,13 +189,13 @@ const LoginPage = ({ onLogin }) => {
 
           {/* Submit */}
           <button type="submit" disabled={loading||!username||!password}
-            style={{width:"100%",padding:"16px",border:"none",borderRadius:14,background:loading||!username||!password?"rgba(255,255,255,0.1)":"linear-gradient(135deg,#6366F1,#8B5CF6)",color:loading||!username||!password?"rgba(255,255,255,0.3)":"#fff",fontSize:16,fontWeight:700,cursor:loading||!username||!password?"not-allowed":"pointer",transition:"all 0.2s",boxShadow:loading||!username||!password?"none":"0 8px 24px rgba(99,102,241,0.4)",letterSpacing:"0.3px"}}>
+            style={{width:"100%",padding:"16px",border:"none",borderRadius:14,background:loading||!username||!password?"#e2e8f0":"linear-gradient(135deg,#1e40af,#1d4ed8)",color:loading||!username||!password?"#94a3b8":"#fff",fontSize:16,fontWeight:700,cursor:loading||!username||!password?"not-allowed":"pointer",transition:"all 0.2s",boxShadow:loading||!username||!password?"none":"0 8px 24px rgba(30,64,175,0.3)",letterSpacing:"0.3px"}}>
             {loading?"⟳ Signing in...":"Sign In"}
           </button>
         </form>
 
         {/* Footer */}
-        <p style={{textAlign:"center",fontSize:12,color:"rgba(255,255,255,0.3)",marginTop:24,fontWeight:500}}>🔐 Secured access · Session based</p>
+        <p style={{textAlign:"center",fontSize:12,color:"#94a3b8",marginTop:24,fontWeight:500}}>🔐 Secured access · Session based</p>
       </div>
     </div>
   );
@@ -348,12 +349,12 @@ export default function App() {
       {toast&&<div style={{position:"fixed",top:16,left:"50%",transform:"translateX(-50%)",zIndex:2000,padding:"12px 20px",borderRadius:"12px",fontSize:"14px",fontWeight:600,animation:"fadeIn 0.3s",boxShadow:"0 8px 24px rgba(0,0,0,0.15)",background:toast.t==="error"?"#FEE2E2":toast.t==="warn"?"#FEF3C7":"#DCFCE7",color:toast.t==="error"?"#DC2626":toast.t==="warn"?"#92400E":"#166534",maxWidth:"90%",textAlign:"center"}}>{toast.m}</div>}
 
       {/* Header */}
-      <div style={{background:"linear-gradient(135deg,#4F46E5,#7C3AED)",padding:"12px 20px 0",flexShrink:0}}>
+      <div style={{background:"linear-gradient(135deg,#0f172a,#1e293b)",padding:"12px 20px 0",flexShrink:0}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:"14px"}}>
           <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
-            <div style={{width:38,height:38,borderRadius:"12px",background:"rgba(255,255,255,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"18px"}}>👥</div>
+            <img src={logo} alt="ArneHire" style={{width:38,height:38,borderRadius:"12px",objectFit:"contain"}}/>
             <div>
-              <div style={{fontWeight:800,fontSize:"18px",color:"#fff"}}>HR Tracker</div>
+              <div style={{fontWeight:800,fontSize:"18px",color:"#fff"}}>ArneHire</div>
               <div style={{fontSize:"11px",color:"rgba(255,255,255,0.7)",display:"flex",alignItems:"center",gap:"6px"}}>
                 {cands.length} candidate{cands.length!==1?"s":""}
                 {sync&&<span>· ⟳ Syncing...</span>}
