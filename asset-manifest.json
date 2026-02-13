@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/hr-tracker/static/css/main.e6c13ad2.css",
-    "main.js": "/hr-tracker/static/js/main.4a04f03f.js",
+    "main.js": "/hr-tracker/static/js/main.40333f3b.js",
     "static/js/453.f205693c.chunk.js": "/hr-tracker/static/js/453.f205693c.chunk.js",
     "index.html": "/hr-tracker/index.html",
     "main.e6c13ad2.css.map": "/hr-tracker/static/css/main.e6c13ad2.css.map",
-    "main.4a04f03f.js.map": "/hr-tracker/static/js/main.4a04f03f.js.map",
+    "main.40333f3b.js.map": "/hr-tracker/static/js/main.40333f3b.js.map",
     "453.f205693c.chunk.js.map": "/hr-tracker/static/js/453.f205693c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.4a04f03f.js"
+    "static/js/main.40333f3b.js"
   ]
 }
