@@ -16,11 +16,9 @@ window.storage = {
   }
 };
 // =============================================
-// PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
+// API URL loaded from .env (REACT_APP_API_URL)
 // =============================================
-const API_URL = "https://script.google.com/macros/s/AKfycbzYwaw9e0JKlI4HzANu4kcLBAvOkR0X1QcvsH3SuXJdZliQ9nWZoZViPkH6jgSTx71kbw/exec";
-// DeployementID = "AKfycbzYwaw9e0JKlI4HzANu4kcLBAvOkR0X1QcvsH3SuXJdZliQ9nWZoZViPkH6jgSTx71kbw"
-// Example: "https://script.google.com/macros/s/AKfycbx.../exec"
+const API_URL = process.env.REACT_APP_API_URL || "";
 
 const STAGES = ["Initial Screening","First Machine Test","Second Machine Test","Final Discussion","Final Status"];
 const STAGE_SHORT = ["Screening","Test 1","Test 2","Discussion","Final"];
@@ -225,6 +223,7 @@ export default function App() {
   const [showFilt,setShowFilt] = useState(false);
   const [swS,setSwS] = useState(null);
   const [toast,setToast] = useState(null);
+  const [sendInv,setSendInv] = useState(false);
   const cr = useRef(null);
 
   const tt = (m,t="success") => { setToast({m,t}); setTimeout(()=>setToast(null),3000); };
@@ -280,14 +279,31 @@ export default function App() {
     setCands(p=>p.map(c=>c.id===detail.id?{...c,...form}:c));setDetail({...detail,...form});setEdit(false);
   };
 
+  const sendInviteFn = async(cand,mode,date,time,stage)=>{
+    if(!API_URL||!cand){console.log("sendInvite skipped",{API_URL:!!API_URL,cand});return;}
+    console.log("Sending invite:",{name:cand.name,email:cand.email,stage,mode,date,time});
+    try{
+      const r=await api.post({action:"sendInvite",name:cand.name,email:cand.email,position:cand.position,stage,mode,date,time});
+      console.log("sendInvite response:",r);
+      if(r)tt("📨 Invite sent"+(cand.email?" to "+cand.email:"")); else tt("Invite may have failed","warn");
+    }catch(e){tt("Failed to send invite","error");}
+  };
+
   const moveCand = async(id,ns,fs="")=>{
     if(API_URL){setSync(true);try{await api.post({action:"move",id,stage:ns,finalStatus:fs,stageInfo:sf});tt("Moved");}catch(e){tt("Moved locally","warn");}setSync(false);}
+    const cand=showMov||null;
+    console.log("moveCand cand:",{id,candName:cand?.name,candEmail:cand?.email});
     setCands(p=>p.map(c=>{
       if(c.id!==id)return c;
       const h=[...(c.stageHistory||[]),{stage:ns,date:new Date().toISOString(),...sf}];
       return{...c,stage:ns,finalStatus:fs||c.finalStatus,interviewDate:sf.interviewDate||c.interviewDate,interviewTime:sf.interviewTime||c.interviewTime,interviewMode:sf.interviewMode||c.interviewMode,stageHistory:h};
     }));
-    setShowMov(null);setSf({interviewDate:"",interviewTime:"",interviewMode:"Virtual"});
+    // Send invite if toggled on
+    console.log("Move invite check:",{sendInv,ns,date:sf.interviewDate,time:sf.interviewTime,cand:cand?.name});
+    if(sendInv&&ns!=="Final Status"&&sf.interviewDate&&sf.interviewTime){
+      await sendInviteFn(cand,sf.interviewMode,sf.interviewDate,sf.interviewTime,ns);
+    }
+    setShowMov(null);setSf({interviewDate:"",interviewTime:"",interviewMode:"Virtual"});setSendInv(false);
   };
 
   const delCand = async(id)=>{
@@ -333,8 +349,8 @@ export default function App() {
           </div>
         )}
         <div style={{display:"flex",gap:"8px",marginTop:"12px"}}>
-          {si(c.stage)>0&&<button onClick={e=>{e.stopPropagation();setShowMov({id:c.id,stage:STAGES[si(c.stage)-1]});setSf({interviewDate:"",interviewTime:"",interviewMode:"Virtual"});}} style={{flex:1,padding:"10px",border:"2px solid #E5E7EB",borderRadius:"12px",background:"#fff",fontSize:"13px",fontWeight:600,color:"#6B7280",cursor:"pointer"}}>← Back</button>}
-          {si(c.stage)<4&&<button onClick={e=>{e.stopPropagation();setShowMov({id:c.id,stage:STAGES[si(c.stage)+1]});setSf({interviewDate:"",interviewTime:"",interviewMode:"Virtual"});}} style={{flex:1,padding:"10px",border:"none",borderRadius:"12px",background:`linear-gradient(135deg,${cl.br},${cl.hd})`,fontSize:"13px",fontWeight:600,color:"#fff",cursor:"pointer"}}>Next Stage →</button>}
+          {si(c.stage)>0&&<button onClick={e=>{e.stopPropagation();setShowMov({id:c.id,stage:STAGES[si(c.stage)-1],name:c.name,email:c.email,position:c.position});setSf({interviewDate:"",interviewTime:"",interviewMode:"Virtual"});}} style={{flex:1,padding:"10px",border:"2px solid #E5E7EB",borderRadius:"12px",background:"#fff",fontSize:"13px",fontWeight:600,color:"#6B7280",cursor:"pointer"}}>← Back</button>}
+          {si(c.stage)<4&&<button onClick={e=>{e.stopPropagation();setShowMov({id:c.id,stage:STAGES[si(c.stage)+1],name:c.name,email:c.email,position:c.position});setSf({interviewDate:"",interviewTime:"",interviewMode:"Virtual"});}} style={{flex:1,padding:"10px",border:"none",borderRadius:"12px",background:`linear-gradient(135deg,${cl.br},${cl.hd})`,fontSize:"13px",fontWeight:600,color:"#fff",cursor:"pointer"}}>Next Stage →</button>}
         </div>
       </div>
     );
@@ -506,7 +522,23 @@ export default function App() {
             <Inp l="Time" v={sf.interviewTime} onChange={v=>setSf(f=>({...f,interviewTime:v}))} type="time"/>
           </div>
           <Sel l="Mode" v={sf.interviewMode} onChange={v=>setSf(f=>({...f,interviewMode:v}))} opts={INT_MODES}/>
-          <button onClick={()=>moveCand(showMov.id,showMov.stage)} disabled={sync} style={{width:"100%",padding:"16px",border:"none",borderRadius:"14px",background:sync?"#9CA3AF":"linear-gradient(135deg,#4F46E5,#7C3AED)",color:"#fff",fontSize:"16px",fontWeight:700,cursor:sync?"wait":"pointer"}}>{sync?"⟳ Moving...":"Confirm Move"}</button>
+          {/* Send Invite Toggle */}
+          {API_URL&&<div style={{marginBottom:"16px"}}>
+            <button type="button" onClick={()=>setSendInv(!sendInv)} style={{width:"100%",padding:"14px 16px",borderRadius:"14px",border:sendInv?"2px solid #1e40af":"2px solid #E5E7EB",background:sendInv?"#EFF6FF":"#F9FAFB",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",transition:"all 0.2s"}}>
+              <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+                <span style={{fontSize:"20px"}}>{sendInv?"✉️":"📨"}</span>
+                <div style={{textAlign:"left"}}>
+                  <div style={{fontSize:"14px",fontWeight:700,color:sendInv?"#1e40af":"#374151"}}>Send Invite</div>
+                  <div style={{fontSize:"11px",color:"#6B7280"}}>Calendar event + email to candidate</div>
+                </div>
+              </div>
+              <div style={{width:44,height:24,borderRadius:12,background:sendInv?"#1e40af":"#D1D5DB",position:"relative",transition:"background 0.2s"}}>
+                <div style={{width:20,height:20,borderRadius:10,background:"#fff",position:"absolute",top:2,left:sendInv?22:2,transition:"left 0.2s",boxShadow:"0 1px 3px rgba(0,0,0,0.2)"}}/>
+              </div>
+            </button>
+            {sendInv&&(!sf.interviewDate||!sf.interviewTime)&&<div style={{fontSize:"12px",color:"#DC2626",marginTop:"6px",fontWeight:600}}>⚠️ Please select date and time to send invite</div>}
+          </div>}
+          <button onClick={()=>moveCand(showMov.id,showMov.stage)} disabled={sync||(sendInv&&(!sf.interviewDate||!sf.interviewTime))} style={{width:"100%",padding:"16px",border:"none",borderRadius:"14px",background:sync||(sendInv&&(!sf.interviewDate||!sf.interviewTime))?"#9CA3AF":"linear-gradient(135deg,#0f172a,#1e293b)",color:"#fff",fontSize:"16px",fontWeight:700,cursor:sync||(sendInv&&(!sf.interviewDate||!sf.interviewTime))?"not-allowed":"pointer"}}>{sync?"⟳ Processing...":sendInv?"Confirm Move & Send Invite":"Confirm Move"}</button>
         </>}
       </Sh>
 
